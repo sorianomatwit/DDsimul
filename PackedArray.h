@@ -1,18 +1,54 @@
 
 #ifndef _PACKEDARR_H_
 #define _PACKEDARR_H_
+#include <cstring>
+#include <vector>
 template <typename T>
 class PackedArray
 {
 private:
-	int size;
-	T* arr;
+	std::vector<T> arr;
 public:
 	int Count;
 	PackedArray();
-	T *Get(int index);
+	~PackedArray();
+	T* Get(int index);
 	void Add(const T& item);
 	void Remove(int index);
 };
-//#include "PackedArray.cpp"
+template <typename T>
+PackedArray<T>::PackedArray()
+{
+	this->Count = 0;
+}
+template <typename T>
+PackedArray<T>::~PackedArray() = default;
+
+template <typename T>
+T* PackedArray<T>::Get(int index)
+{
+	if (index >= 0 && index < Count) {
+		return &this->arr[index];
+	}
+	return nullptr;
+}
+template <typename T>
+
+void PackedArray<T>::Add(const T& item)
+{
+	arr.push_back(item);
+	this->Count++;
+}
+
+
+template <typename T>
+void PackedArray<T>::Remove(int index)
+{
+	if (index >= 0 && index < Count)
+	{
+		std::swap(arr[index], arr.back());
+		arr.pop_back();
+		Count--;
+	}
+}
 #endif

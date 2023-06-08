@@ -6,7 +6,6 @@
 #include <map>
 #include <string.h>
 #include <functional>
-using RemoveEntity = std::function<bool(unsigned short)>;
 
 class ComponentManager
 {
@@ -16,25 +15,32 @@ public :
      static int componentCount;
      static PackedArray<Sets> allComponentSets;
      static std::map<std::string, int> componentKeys;
-     static PackedArray<RemoveEntity> allEntityRemoves;
+     static std::vector<std::function<bool(unsigned short)>> allEntityRemoves;
 
     template <typename T>
-    static ComponentSet<T> CreateComponentSet();
+    static ComponentSet<T> * CreateComponentSet();
 
     template <typename T>
     static ComponentSet<T> * GetComponentSet();
 
+    template <typename T>
+    static int GetComponentKey();
+
 };
 
 template <typename T>
-ComponentSet<T> ComponentManager::CreateComponentSet()
+ComponentSet<T>* ComponentManager::CreateComponentSet()
 {
-	ComponentSet<T> instanceOfComponentSet;
-	ComponentManager::allComponentSets.Add(instanceOfComponentSet);
-	ComponentManager::allEntityRemoves.Add(*instanceOfComponentSet.RemoveEntity);
-	ComponentManager::componentKeys[typeid(T).name()] = componentCount;
-	ComponentManager::componentCount++;
-	return instanceOfComponentSet;
+    ComponentSet<T>* instanceOfComponentSet = new ComponentSet<T>(ComponentManager::componentCount);
+    ComponentManager::allComponentSets.Add(*instanceOfComponentSet);
+    ComponentManager::componentKeys[typeid(T).name()] = ComponentManager::componentCount;
+
+    std::function<bool(unsigned short)> removeEntityFunc = std::bind(&ComponentSet<T>::RemoveEntity, instanceOfComponentSet, std::placeholders::_1);
+
+    ComponentManager::allEntityRemoves.push_back(removeEntityFunc);
+
+    ComponentManager::componentCount++;
+    return instanceOfComponentSet;
 }
 
 template <class T>
@@ -43,10 +49,12 @@ ComponentSet<T>* ComponentManager::GetComponentSet()
 	Sets* ptr;
 	ptr = ComponentManager::allComponentSets.Get(ComponentManager::componentKeys[typeid(T).name()]);
 	ComponentSet<T>* result = reinterpret_cast<ComponentSet<T>*>(ptr);
-	return NULL;
+	return result;
 }
-//int ComponentManager::componentCount = 0;
-//PackedArray<Sets> ComponentManager::allComponentSets;
-//std::map<std::string, int> ComponentManager::componentKeys;
-//PackedArray<RemoveEntity> ComponentManager::allEntityRemoves;
+
+template <typename T>
+int ComponentManager::GetComponentKey() {
+    return ComponentManager::componentKeys[typeid(T).name()];
+}
+
 #endif

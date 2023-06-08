@@ -142,15 +142,14 @@
     <ClCompile Include="ComponentManager.cpp" />
     <ClCompile Include="ComponentSet.cpp" />
     <ClCompile Include="DDsimul.cpp" />
-    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="PackedArray.cpp" />
     <ClCompile Include="Sets.cpp" />
+    <ClCompile Include="ECSTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="ComponentSet.h" />
-    <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="PackedArray.h" />
     <ClInclude Include="resource.h" />
