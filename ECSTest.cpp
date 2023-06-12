@@ -10,7 +10,7 @@
 #include <bitset>
 BOOST_AUTO_TEST_SUITE(ECSTest)
 
-BOOST_AUTO_TEST_CASE(TestAddItem) {
+BOOST_AUTO_TEST_CASE(TestPackedArray_AddItem) {
 	PackedArray<int> packedArray;
 	int item = 42;
 	packedArray.Add(item);
@@ -21,7 +21,7 @@ BOOST_AUTO_TEST_CASE(TestAddItem) {
 	BOOST_TEST(packedArray.Count == 1);
 }
 
-BOOST_AUTO_TEST_CASE(TestRemoveItem) {
+BOOST_AUTO_TEST_CASE(TestPackedArray_RemoveItem) {
 	PackedArray<int> packedArray;
 	int item1 = 42;
 	int item2 = 100;
@@ -36,7 +36,7 @@ BOOST_AUTO_TEST_CASE(TestRemoveItem) {
 	BOOST_TEST(*packedArray.Get(0) == item2);
 }
 
-BOOST_AUTO_TEST_CASE(TestGetEmpty) {
+BOOST_AUTO_TEST_CASE(TestPackedArray_GetEmpty) {
 	PackedArray<int> packedArray;
 
 	int* retreivedItem = packedArray.Get(0);
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(TestGetEmpty) {
 	BOOST_TEST(retreivedItem == nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(TestAddEntity)
+BOOST_AUTO_TEST_CASE(TestComponentSet_AddEntity)
 {
 	unsigned short entityId = 0;
 	unsigned short entityId2 = 42;
@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(TestAddEntity)
 	BOOST_TEST(intComponents.HasEntity(entityId2));
 }
 
-BOOST_AUTO_TEST_CASE(TestGetComponent)
+BOOST_AUTO_TEST_CASE(TestComponentSet_GetComponent)
 {
 	unsigned short entityId = 42;
 	ComponentSet<int> intComponents(0);
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(TestGetComponent)
 	BOOST_TEST(result != nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(TestGetNoComponent)
+BOOST_AUTO_TEST_CASE(TestComponentSet_GetNoComponent)
 {
 	unsigned short entityId = 42;
 	ComponentSet<int> intComponents(0);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(TestGetNoComponent)
 	BOOST_TEST(result == nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(TestHasEntity)
+BOOST_AUTO_TEST_CASE(TestComponentSet_HasEntity)
 {
 	unsigned short entityId = 0;
 	unsigned short entityId2 = 42;
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(TestHasEntity)
 	BOOST_TEST(intComponents.HasEntity(entityId2) == FALSE);
 }
 
-BOOST_AUTO_TEST_CASE(TestRemoveOneEntity)
+BOOST_AUTO_TEST_CASE(TestComponentSet_RemoveOneEntity)
 {
 	unsigned short entityId = 0;
 	ComponentSet<int> intComponents(0);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(TestRemoveOneEntity)
 	BOOST_TEST(intComponents.HasEntity(entityId) == FALSE);
 }
 
-BOOST_AUTO_TEST_CASE(TestRemoveEntity)
+BOOST_AUTO_TEST_CASE(TestComponentSet_RemoveEntity)
 {
 	unsigned short entityId = 0;
 	unsigned short entityId2 = 42;
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(TestRemoveEntity)
 	BOOST_TEST(intComponents.HasEntity(entityId2) == TRUE);
 }
 
-BOOST_AUTO_TEST_CASE(TestCreateComponentSet) {
+BOOST_AUTO_TEST_CASE(TestComponentManager_CreateComponentSet) {
 	ComponentSet<int>* result = ComponentManager::CreateComponentSet<int>();
 
 	std::string resultType = result->ComponentName();
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(TestCreateComponentSet) {
 	BOOST_TEST(ComponentManager::GetComponentKey<int>() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(TestGetComponentSet) {
+BOOST_AUTO_TEST_CASE(TestComponentManager_GetComponentSet) {
 	ComponentManager::CreateComponentSet<int>();
 
 	ComponentSet<int>* result = ComponentManager::GetComponentSet<int>();
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(TestGetComponentSet) {
 	BOOST_TEST(result != nullptr);
 }
 
-BOOST_AUTO_TEST_CASE(TestGetComponentKey) {
+BOOST_AUTO_TEST_CASE(TestComponentManager_GetComponentKey) {
 	ComponentManager::CreateComponentSet<int>();
 	ComponentManager::CreateComponentSet<std::string>();
 
@@ -145,7 +145,7 @@ BOOST_AUTO_TEST_CASE(TestGetComponentKey) {
 	BOOST_TEST(ComponentManager::GetComponentKey<std::string>() == 1);
 }
 
-BOOST_AUTO_TEST_CASE(TestBitHas) {
+BOOST_AUTO_TEST_CASE(TestBitTracker_Has) {
 	// ...0000 0000 0000 1100
 	BitTracker tracker = BitTracker(0b1000);
 	int index = 3;
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(TestBitHas) {
 	BOOST_TEST(tracker.Has(index2) == false);
 }
 
-BOOST_AUTO_TEST_CASE(TestBitAdd) {
+BOOST_AUTO_TEST_CASE(TestBitTracker_Add) {
 	BitTracker tracker = BitTracker();
 	int index1 = 1;
 	tracker.Add(index1);
@@ -164,14 +164,14 @@ BOOST_AUTO_TEST_CASE(TestBitAdd) {
 	BOOST_TEST(tracker.bits == 0b0010);
 }
 
-BOOST_AUTO_TEST_CASE(TestBitRemove) {
+BOOST_AUTO_TEST_CASE(TestBitTracker_Remove) {
 	BitTracker tracker = BitTracker(0b0100);
 	tracker.Remove(2);
 	BOOST_TEST(tracker.Has(2) == false);
 	BOOST_TEST(tracker.bits == 0b0000);
 }
 
-BOOST_AUTO_TEST_CASE(TestManagerCreateEntity) {
+BOOST_AUTO_TEST_CASE(TestEntityManager_CreateEntity) {
 	Entity testEntity = EntityManager::CreateEntity();
 	
 	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0);
@@ -179,20 +179,20 @@ BOOST_AUTO_TEST_CASE(TestManagerCreateEntity) {
 	BOOST_TEST(testEntity._id == 0);
 }
 
-BOOST_AUTO_TEST_CASE(TestManagerAddComponentKey) {
+BOOST_AUTO_TEST_CASE(TestEntityManager_AddComponentKey) {
 	Entity testEntity = EntityManager::CreateEntity();
 	EntityManager::AddComponentKey(&testEntity, 1);
 	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0b0010);
 }
 
-BOOST_AUTO_TEST_CASE(TestManagerRemoveComponentKey) {
+BOOST_AUTO_TEST_CASE(TestEntityManager_RemoveComponentKey) {
 	Entity testEntity = EntityManager::CreateEntity();
 	EntityManager::AddComponentKey(&testEntity, 1);
 	EntityManager::RemoveComponentKey(&testEntity, 1);
 	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0b0000);
 }
 
-BOOST_AUTO_TEST_CASE(TestManagerDestroyEntity) {
+BOOST_AUTO_TEST_CASE(TestEntityManager_DestroyEntity) {
 	Entity testEntity = EntityManager::CreateEntity();
 	EntityManager::DestroyEntity(&testEntity);
 	BOOST_TEST(EntityManager::deadEntities.Count == 1);
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(TestManagerDestroyEntity) {
 	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0);
 }
 
-BOOST_AUTO_TEST_CASE(TestManagerDestroyEntityWithComponents) {
+BOOST_AUTO_TEST_CASE(TestEntityManager_DestroyEntityWithComponents) {
 	Entity entity = EntityManager::CreateEntity();
 	ComponentManager::CreateComponentSet<int>()->AddEntity(entity._id);
 	EntityManager::DestroyEntity(&entity);
