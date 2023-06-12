@@ -1,15 +1,16 @@
 #ifndef _COMPONENTSET_H_
 #define _COMPONENTSET_H_
 #include "Sets.h"
-#include "PackedArray.cpp"
+#include "PackedArray.h"
 #include <string>
 #include <iostream>
 #include <typeinfo>
+#include <array>
 template <class T>
 class ComponentSet : public Sets
 {
 private:
-	unsigned short sparseArray[Sets::MAX_ENTITIES] = {};
+	std::array<unsigned short, Sets::MAX_ENTITIES> sparseArray;
 	PackedArray<unsigned short> entities;
 	PackedArray<T> components; 
 	
@@ -17,6 +18,7 @@ public:
 	int key = 0;
 	unsigned short count = 0;
 	ComponentSet(int key);
+	~ComponentSet();
 	bool HasEntity(unsigned short entityID);
 	bool RemoveEntity(unsigned short entityID);
 	bool AddEntity(unsigned short entityID);
@@ -30,15 +32,17 @@ ComponentSet<T>::ComponentSet(int key)
 {
 	this->key = key;
 	std::cout << "Component has been made\n";
-	for (int i = 0; i < Sets::MAX_ENTITIES; i++)
-		this->sparseArray[i] = Sets::MAX_ENTITIES + 1;
+	sparseArray.fill(Sets::MAX_ENTITIES + 1);
+	
 }
+template <class T>
+ComponentSet<T>::~ComponentSet() = default;
+
 template <class T>
 bool ComponentSet<T>::HasEntity(unsigned short entityID)
 {
-	return entityID < (sizeof(this->sparseArray) / sizeof(this->sparseArray[0]))
+	return entityID < sparseArray.size()
 		&& this->sparseArray[entityID] != Sets::MAX_ENTITIES + 1
-		&& this->entities.Count > 0
 		&& *this->entities.Get(this->sparseArray[entityID]) == entityID;
 }
 template <class T>
@@ -51,7 +55,7 @@ bool ComponentSet<T>::RemoveEntity(unsigned short entityID)
 		this->entities.Remove(pindex);
 		this->components.Remove(pindex);
 		this->sparseArray[*swapID] = pindex;
-		this->sparseArray[entityID] = -1;
+		this->sparseArray[entityID] = Sets::MAX_ENTITIES + 1;
 		this->count = this->entities.Count;
 		return true;
 	}
@@ -60,7 +64,7 @@ bool ComponentSet<T>::RemoveEntity(unsigned short entityID)
 template <class T>
 bool ComponentSet<T>::AddEntity(unsigned short  entityID)
 {
-	if (!this->HasEntity(entityID))
+	if (!this->HasEntity(entityID) && entityID < sparseArray.size())
 	{
 		this->sparseArray[entityID] = this->entities.Count;
 		this->entities.Add(entityID);
@@ -82,7 +86,4 @@ template <class T>
 std::string ComponentSet<T>::ComponentName() {
 	return typeid(T).name();
 }
-//int ComponentManager::componentCount = 0;
-//PackedArray<Sets> ComponentManager::allComponentSets;
-//#include "ComponentSet.cpp"
 #endif

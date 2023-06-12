@@ -3,13 +3,15 @@
 #define _PACKEDARR_H_
 #include <cstring>
 #include <vector>
+#include <algorithm>
+
 template <typename T>
 class PackedArray
 {
 private:
 	std::vector<T> arr;
 public:
-	int Count;
+	mutable int Count;
 	PackedArray();
 	~PackedArray();
 	T* Get(int index);
@@ -28,7 +30,7 @@ template <typename T>
 T* PackedArray<T>::Get(int index)
 {
 	if (index >= 0 && index < Count) {
-		return &this->arr[index];
+		return &arr[index];
 	}
 	return nullptr;
 }

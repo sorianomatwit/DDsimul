@@ -2,13 +2,14 @@
 #define ENTITY_MANAGER
 
 #include "ComponentManager.h"
-
+#include <iostream>
+#include <array>
 struct Entity
 {
 public:
 	unsigned short _id;
 	Entity(unsigned short newId);
-
+	~Entity() = default;
 	template <typename T>
 	bool HasComponent();// { return ComponentManager::GetComponentSet<T>() }//.HasEntity(this);
 	template <typename T>
@@ -43,7 +44,7 @@ public:
 class EntityManager
 {
 public:
-	static BitTracker activeEntityBits[];
+	static std::array<BitTracker, Sets::MAX_ENTITIES> activeEntityBits;
 	static PackedArray<unsigned short> deadEntities;
 	static unsigned short entityCount;
 
@@ -62,16 +63,28 @@ bool Entity::HasComponent() {
 template <typename T>
 void Entity::AddComponent() {
 	ComponentSet<T>* componentSet = ComponentManager::GetComponentSet<T>();
-	componentSet->AddEntity(this->_id);
-	EntityManager::AddComponentKey(this, componentSet->key);
+	if (componentSet != nullptr) {
+		componentSet->AddEntity(this->_id);
+		std::cout << "Key" << ComponentManager::GetComponentKey<T>();
+		EntityManager::AddComponentKey(this, ComponentManager::GetComponentKey<T>());
+	}
+	else {
+		std::cerr << "Try to add component that does not exist in the ComponentManager";
+	}
 
 }
 
 template <typename T>
 void Entity::RemoveComponent() {
 	ComponentSet<T>* componentSet = ComponentManager::GetComponentSet<T>();
-	componentSet->RemoveEntity(this->_id);
-	EntityManager::RemoveComponentKey(this, componentSet->key);
+	if (componentSet != nullptr) {
+		componentSet->RemoveEntity(this->_id);
+		EntityManager::RemoveComponentKey(this, componentSet->key);
+	}
+	else {
+		std::cerr << "Try to add component that does not exist in the ComponentManager";
+	}
+
 }
 
 template <typename T>
@@ -80,8 +93,4 @@ T* Entity::GetComponent() {
 	return componentSet->GetComponent(this->_id);
 }
 
-
-//BitTracker EntityManager::activeEntityBits[BitTracker::TOTAL_BITS];
-//PackedArray<unsigned short> EntityManager::deadEntities;
-//unsigned short EntityManager::entityCount = 0;
 #endif // !ENTITY_MANAGER

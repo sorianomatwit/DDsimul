@@ -26,6 +26,7 @@ public :
     template <typename T>
     static int GetComponentKey();
 
+
 };
 
 template <typename T>
