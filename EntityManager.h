@@ -11,13 +11,13 @@ public:
 	Entity(unsigned short newId);
 	~Entity() = default;
 	template <typename T>
-	bool HasComponent();// { return ComponentManager::GetComponentSet<T>() }//.HasEntity(this);
+	bool HasComponent();
 	template <typename T>
-	void AddComponent();// { ComponentManager.GetComponentSet<T>().AddEntity(this, newComponent) };
+	void AddComponent();
 	template <typename T>
-	void RemoveComponent();// { ComponentManager::GetComponentSet<T>().RemoveEntity(this) };
+	void RemoveComponent();
 	template <typename T>
-	T* GetComponent(); //{ ComponentManager.GetComponentSet<T>().GetComponent(this) };
+	T* GetComponent(); 
 	void Destroy();
 	bool Equals(struct Entity* other);
 };
