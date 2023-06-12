@@ -208,47 +208,87 @@ BOOST_AUTO_TEST_CASE(TestManagerDestroyEntityWithComponents) {
 	BOOST_TEST(EntityManager::activeEntityBits[entity._id].bits == 0);
 }
 
-BOOST_AUTO_TEST_CASE(TestEntityHasComponent) {
-	Entity testEntity = EntityManager::CreateEntity();
-	ComponentManager::CreateComponentSet<int>()->AddEntity(testEntity._id);
-	EntityManager::AddComponentKey(&testEntity, 0);
-	ComponentManager::CreateComponentSet<char>();
-	BOOST_TEST(testEntity.HasComponent<int>() == true);
-	BOOST_TEST(testEntity.HasComponent<std::string>() == false);
-	BOOST_TEST(testEntity.HasComponent<char>() == false);
+BOOST_AUTO_TEST_CASE(TestEntity_HasComponent)
+{
+	Entity entity(0);
+	ComponentManager::CreateComponentSet<int>();
+
+	entity.AddComponent<int>();
+
+	BOOST_TEST(entity.HasComponent<int>() == true);
 }
 
-BOOST_AUTO_TEST_CASE(TestEntityAddComponent) {
-	ComponentSet<int>* componentSet = ComponentManager::CreateComponentSet<int>();
-	std::cout << "KEY: " << componentSet->key << "\n";
-	Entity testEntity = EntityManager::CreateEntity();
-	
-	std::bitset<64> expected(0b0001);
-	testEntity.AddComponent<int>();
-	std::bitset<64> actual(EntityManager::activeEntityBits[testEntity._id].bits);
-	std::cout << " Expected: " << expected << "\nActual:  " << actual;
-	BOOST_TEST(componentSet->HasEntity(testEntity._id) == true);
-	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0b0001);
+BOOST_AUTO_TEST_CASE(TestEntity_HasNoComponent)
+{
+	Entity entity(0);
+
+	BOOST_TEST(entity.HasComponent<int>() == false);
 }
 
-BOOST_AUTO_TEST_CASE(TestEntityRemoveComponent) {
-	Entity testEntity = EntityManager::CreateEntity();
-	ComponentSet<int>* componentSet = ComponentManager::CreateComponentSet<int>();
-	testEntity.AddComponent<int>();
-	testEntity.RemoveComponent<int>();
-	testEntity.RemoveComponent<std::string>();
-	BOOST_TEST(componentSet->HasEntity(testEntity._id) == false);
-	BOOST_TEST(EntityManager::activeEntityBits[testEntity._id].bits == 0b0000);
+BOOST_AUTO_TEST_CASE(TestEntity_AddComponent)
+{
+	Entity entity(0);
+	ComponentManager::CreateComponentSet<int>();
+
+	entity.AddComponent<int>();
+
+	BOOST_TEST(entity.HasComponent<int>() == true);
+	BOOST_TEST(ComponentManager::GetComponentSet<int>()->HasEntity(entity._id) == true);
 }
 
-BOOST_AUTO_TEST_CASE(TestEntityGetComponent) {
-	Entity testEntity = EntityManager::CreateEntity();
-	ComponentSet<int>* componentSet = ComponentManager::CreateComponentSet<int>();
-	testEntity.AddComponent<int>();
-	std::string* component = testEntity.GetComponent<std::string>();
-	component->assign("Hello World!");
-	BOOST_TEST(component->compare("Hello World!") == 0);
-	BOOST_TEST(component->empty() == false);
+BOOST_AUTO_TEST_CASE(TestEntity_RemoveComponent)
+{
+	Entity entity(0);
+	ComponentManager::CreateComponentSet<int>();
+
+	entity.AddComponent<int>();
+	entity.RemoveComponent<int>();
+
+	BOOST_TEST(entity.HasComponent<int>() == false);
+	BOOST_TEST(ComponentManager::GetComponentSet<int>()->HasEntity(entity._id) == false);
+}
+
+BOOST_AUTO_TEST_CASE(TestEntity_GetComponent)
+{
+	Entity entity(0);
+	ComponentManager::CreateComponentSet<int>();
+
+	entity.AddComponent<int>();
+
+	int* component = entity.GetComponent<int>();
+
+	BOOST_TEST(component != nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(TestEntity_GetNoComponent)
+{
+	Entity entity(0);
+
+	int* component = entity.GetComponent<int>();
+
+	BOOST_TEST(component == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(TestEntity_Destroy)
+{
+	Entity entity(0);
+	ComponentManager::CreateComponentSet<int>();
+
+	entity.AddComponent<int>();
+	entity.Destroy();
+
+	BOOST_TEST(EntityManager::deadEntities.Count == 1);
+	BOOST_TEST(EntityManager::activeEntityBits[entity._id].bits == 0);
+}
+
+BOOST_AUTO_TEST_CASE(TestEntity_Equals)
+{
+	Entity entity1(0);
+	Entity entity2(0);
+	Entity entity3(42);
+
+	BOOST_TEST(entity1.Equals(&entity2) == true);
+	BOOST_TEST(entity1.Equals(&entity3) == false);
 }
 
 
