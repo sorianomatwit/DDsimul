@@ -41,9 +41,11 @@ ComponentSet<T>::~ComponentSet() = default;
 template <class T>
 bool ComponentSet<T>::HasEntity(unsigned short entityID)
 {
-	return entityID < sparseArray.size()
-		&& this->sparseArray[entityID] != Sets::MAX_ENTITIES + 1
-		&& *this->entities.Get(this->sparseArray[entityID]) == entityID;
+	bool cond1 = entityID < this->sparseArray.size();
+	cond1 = cond1 && this->sparseArray[entityID] != Sets::MAX_ENTITIES + 1;
+	cond1 = cond1 && this->entities.Count > 0 && *this->entities.Get(this->sparseArray[entityID]) == entityID;
+	return cond1;
+
 }
 template <class T>
 bool ComponentSet<T>::RemoveEntity(unsigned short entityID)

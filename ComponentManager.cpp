@@ -2,10 +2,9 @@
 #include "ComponentManager.h"
 
 int ComponentManager::componentCount = 0;
-PackedArray<Sets> ComponentManager::allComponentSets;
+PackedArray<Sets*> ComponentManager::allComponentSets;
 std::map<std::string, int> ComponentManager::componentKeys;
 std::vector<std::function<bool(unsigned short)>> ComponentManager::allEntityRemoves;
-
 //template <typename T>
 //ComponentSet<T> ComponentManager::CreateComponentSet()
 //{

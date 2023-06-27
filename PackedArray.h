@@ -4,23 +4,29 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 template <typename T>
 class PackedArray
 {
 private:
-	std::vector<T> arr;
+	T* arr;
+	void Resize();
+	
 public:
+	size_t size = 8;
 	mutable int Count;
 	PackedArray();
 	~PackedArray();
 	T* Get(int index);
 	void Add(const T& item);
 	void Remove(int index);
+
 };
 template <typename T>
 PackedArray<T>::PackedArray()
 {
+	arr = (T*)malloc(sizeof(T) * size);
 	this->Count = 0;
 }
 template <typename T>
@@ -38,8 +44,20 @@ template <typename T>
 
 void PackedArray<T>::Add(const T& item)
 {
-	arr.push_back(item);
+	if (this->size == this->Count) this->Resize();
+	//arr.push_back(item);
+	arr[Count] = item;
 	this->Count++;
+}
+template<typename T>
+void PackedArray<T>::Resize() {
+	size_t newSize = size * 2;
+	T* newArr = (T*)malloc(sizeof(T) * newSize);
+
+	std::memcpy(newArr, arr, size * sizeof(T));
+	size = newSize;
+	delete[]arr;
+	arr = newArr;
 }
 
 
@@ -48,8 +66,10 @@ void PackedArray<T>::Remove(int index)
 {
 	if (index >= 0 && index < Count)
 	{
-		std::swap(arr[index], arr.back());
-		arr.pop_back();
+		T temp = arr[Count - 1];
+		arr[index] = temp;
+		//std::swap(arr[index], arr.back());
+		//arr.pop_back();
 		Count--;
 	}
 }
