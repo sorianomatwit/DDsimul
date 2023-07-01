@@ -14,9 +14,9 @@ private:
 
 public:
     static std::vector<std::function<bool(unsigned short)>> allEntityRemoves;
-    static int componentCount;
+    static unsigned short componentCount;
     static PackedArray<Sets*> allComponentSets;
-    static std::map<std::string, int> componentKeys;
+    static std::map<std::string, unsigned short> componentKeys;
 
     template <typename T>
     static ComponentSet<T>* CreateComponentSet();
@@ -26,7 +26,7 @@ public:
 
 
     template <typename T>
-    static int GetComponentKey();
+    static unsigned short GetComponentKey();
 
     template <typename T>
     static void DeleteComponent();
@@ -45,8 +45,8 @@ ComponentSet<T>* ComponentManager::CreateComponentSet()
         std::bind(&ComponentSet<T>::RemoveEntity, instanceOfComponentSet, std::placeholders::_1)
     );
 
-    ComponentManager::componentCount++;
-    std::cout << "Component Created\n" << "Key: " << ComponentManager::componentKeys[typeid(T).name()] << "\nType: " << typeid(T).name() << std::endl;
+    ComponentManager::componentCount+=1;
+    //std::cout << "Component Created\n" << "Key: " << ComponentManager::componentKeys[typeid(T).name()] << "\nType: " << typeid(T).name() << std::endl;
     return instanceOfComponentSet;
 }
 
@@ -62,13 +62,13 @@ ComponentSet<T>* ComponentManager::GetComponentSet()
 
 
 template <typename T>
-int ComponentManager::GetComponentKey() {
+unsigned short ComponentManager::GetComponentKey() {
     return ComponentManager::componentKeys[typeid(T).name()];
 }
 
 template <typename T>
 void ComponentManager::DeleteComponent() {
-    int key = ComponentManager::GetComponentKey<T>();
+    uint8_t key = ComponentManager::GetComponentKey<T>();
     ComponentManager::allComponentSets.Remove(key);
 
 }

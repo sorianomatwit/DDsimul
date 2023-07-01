@@ -15,12 +15,13 @@ private:
 	
 public:
 	size_t size = 8;
-	mutable int Count;
+	mutable uint8_t Count;
 	PackedArray();
 	~PackedArray();
-	T* Get(int index);
+	T* Get(uint8_t index);
+	void Set(uint8_t index, T* data);
 	void Add(const T& item);
-	void Remove(int index);
+	void Remove(uint8_t index);
 
 };
 template <typename T>
@@ -33,7 +34,7 @@ template <typename T>
 PackedArray<T>::~PackedArray() = default;
 
 template <typename T>
-T* PackedArray<T>::Get(int index)
+T* PackedArray<T>::Get(uint8_t index)
 {
 	if (index >= 0 && index < Count) {
 		return &arr[index];
@@ -41,7 +42,10 @@ T* PackedArray<T>::Get(int index)
 	return nullptr;
 }
 template <typename T>
-
+void PackedArray<T>::Set(uint8_t index, T* data) {
+	arr[index] = *data;
+}
+template <typename T>
 void PackedArray<T>::Add(const T& item)
 {
 	if (this->size == this->Count) this->Resize();
@@ -62,7 +66,7 @@ void PackedArray<T>::Resize() {
 
 
 template <typename T>
-void PackedArray<T>::Remove(int index)
+void PackedArray<T>::Remove(uint8_t index)
 {
 	if (index >= 0 && index < Count)
 	{

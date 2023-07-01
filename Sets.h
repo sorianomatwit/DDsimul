@@ -3,6 +3,6 @@
 class Sets
 {
 public:
-	static const unsigned short MAX_ENTITIES = 6000;
+	static const unsigned short MAX_ENTITIES = 100;
 };
 #endif

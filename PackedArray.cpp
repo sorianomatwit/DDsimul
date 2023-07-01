@@ -8,7 +8,7 @@
 //	this->Count = 0;
 //}
 //template <typename T>
-//T * PackedArray<T>::Get(int index)
+//T * PackedArray<T>::Get(uint8_t index)
 //{
 //	return &this->arr[index];
 //}
@@ -21,7 +21,7 @@
 //		this->size *= 2;
 //		T* resizedArray = new T[this->size];
 //
-//		for (int i = 0; i < this->Count; i++) {
+//		for (uint8_t i = 0; i < this->Count; i++) {
 //			resizedArray[i] = arr[i];
 //		}
 //
@@ -35,7 +35,7 @@
 //
 //
 //template <typename T>
-//void PackedArray<T>:: Remove(int index)
+//void PackedArray<T>:: Remove(uint8_t index)
 //{
 //	T lastValue = this->arr[Count - 1];
 //	this->arr[index] = lastValue;
@@ -43,5 +43,5 @@
 //	Count--;
 //}
 //void tempFunc2() {
-//	PackedArray<int> notApplical;
+//	PackedArray<uint8_t> notApplical;
 //}

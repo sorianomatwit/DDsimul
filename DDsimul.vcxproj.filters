@@ -39,6 +39,9 @@
     <ClCompile Include="ECSTest.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="SearchTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ComponentSet.h">

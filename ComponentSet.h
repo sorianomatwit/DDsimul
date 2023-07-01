@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <typeinfo>
-#include <array>
+#include <array> 
 template <class T>
 class ComponentSet : public Sets
 {
@@ -15,23 +15,23 @@ private:
 	PackedArray<T> components; 
 	
 public:
-	int key = 0;
+	unsigned short key = 0;
 	unsigned short count = 0;
-	ComponentSet(int key);
+	ComponentSet(uint8_t key);
 	~ComponentSet();
 	bool HasEntity(unsigned short entityID);
 	bool RemoveEntity(unsigned short entityID);
 	bool AddEntity(unsigned short entityID);
+	void SetEntityData(unsigned short entityID, T* data);
 	T* GetComponent(unsigned short entityID);
 	std::string ComponentName();
 };
 
 
 template <class T>
-ComponentSet<T>::ComponentSet(int key)
+ComponentSet<T>::ComponentSet(uint8_t key)
 {
 	this->key = key;
-	std::cout << "Component has been made\n";
 	sparseArray.fill(Sets::MAX_ENTITIES + 1);
 	
 }
@@ -87,5 +87,12 @@ T* ComponentSet<T>::GetComponent(unsigned short entityID)
 template <class T>
 std::string ComponentSet<T>::ComponentName() {
 	return typeid(T).name();
+}
+
+template <class T>
+void ComponentSet<T>::SetEntityData(unsigned short entityID, T* data) {
+	if (this->HasEntity(entityID)) {
+		this->components.Set(this->sparseArray[entityID], data);
+	}
 }
 #endif

@@ -7,7 +7,7 @@
 //{
 //
 //	std::cout << "Component has been made\n";
-//	for (int i = 0; i < Sets::MAX_ENTITIES; i++)
+//	for (uint8_t i = 0; i < Sets::MAX_ENTITIES; i++)
 //		this->sparseArray[i] = Sets::MAX_ENTITIES + 1;
 //}
 //template <class T>

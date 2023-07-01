@@ -7,23 +7,23 @@ PackedArray<unsigned short> EntityManager::deadEntities;
 unsigned short EntityManager::entityCount = 0;
 
 
-Entity EntityManager::CreateEntity()
+Entity * EntityManager::CreateEntity()
 {
 	unsigned short id = EntityManager::entityCount;
 	EntityManager::activeEntityBits[id] = BitTracker();
-	Entity newEntity = Entity(id);
+	Entity * newEntity = new Entity(id);
 	EntityManager::entityCount++;
 	return newEntity;
 }
 
-void EntityManager::AddComponentKey(Entity* entity, int componentKey) {
+void EntityManager::AddComponentKey(Entity* entity, uint8_t componentKey) {
 	BitTracker * entityBits = &EntityManager::activeEntityBits[entity->_id];
 	if (entityBits != nullptr && !entityBits->Has(componentKey)){
 		entityBits->Add(componentKey);
 	}
 };
 
-void EntityManager::RemoveComponentKey(Entity* entity, int componentKey) { 
+void EntityManager::RemoveComponentKey(Entity* entity, uint8_t componentKey) { 
 	BitTracker* entityBits = &EntityManager::activeEntityBits[entity->_id];
 	if (entityBits != nullptr && entityBits->Has(componentKey)) {
 		entityBits->Remove(componentKey);
@@ -35,7 +35,7 @@ void EntityManager::DestroyEntity(Entity* entity)
 
 	EntityManager::deadEntities.Add(entity->_id);
 	BitTracker* bits = &EntityManager::activeEntityBits[entity->_id];
-	for (int i = 0; i < BitTracker::TOTAL_BITS; i++)
+	for (uint8_t i = 0; i < BitTracker::TOTAL_BITS; i++)
 	{
 		if (bits->Has(i))
 		{
