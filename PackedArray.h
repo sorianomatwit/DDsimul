@@ -15,7 +15,7 @@ private:
 	
 public:
 	size_t size = 8;
-	mutable uint8_t Count;
+	mutable unsigned short Count;
 	PackedArray();
 	~PackedArray();
 	T* Get(uint8_t index);

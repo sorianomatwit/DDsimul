@@ -17,7 +17,7 @@ private:
 public:
 	unsigned short key = 0;
 	unsigned short count = 0;
-	ComponentSet(uint8_t key);
+	ComponentSet(unsigned short key);
 	~ComponentSet();
 	bool HasEntity(unsigned short entityID);
 	bool RemoveEntity(unsigned short entityID);
@@ -29,7 +29,7 @@ public:
 
 
 template <class T>
-ComponentSet<T>::ComponentSet(uint8_t key)
+ComponentSet<T>::ComponentSet(unsigned short key)
 {
 	this->key = key;
 	sparseArray.fill(Sets::MAX_ENTITIES + 1);

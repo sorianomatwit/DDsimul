@@ -71,12 +71,13 @@ T* Entity::AddComponent() {
 			return componentSet->GetComponent(this->_id);
 		}
 		else {
-			std::cerr << "Tried to add a component this entity already has\n";
+			std::cerr << "Tried to add a component " <<typeid(T).name() <<" this entity already has\n";
 		}
 	}
 	else {
 		std::cerr << "Try to add component that does not exist in the ComponentManager\n";
 	}
+	return nullptr;
 }
 
 template <typename T>
@@ -94,6 +95,7 @@ void Entity::RemoveComponent() {
 	else {
 		std::cerr << "Try to remove component that does not exist in the ComponentManager\n";
 	}
+	return nullptr;
 }
 
 template <typename T>

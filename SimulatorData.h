@@ -15,8 +15,8 @@ struct Stats {
     double deathCount;
 };
 
-struct Dead {};
 struct Summon { unsigned short ownerId; }; // @note when calling the summon, you only have the id not the entity
+struct Summoner {};
 
 //happen looking at the entity
 struct OnDamagedTrigger {};
@@ -34,7 +34,7 @@ enum PRIORITY {
     THREE = 0b11
 };
 
-typedef enum TPOOL {
+enum TPOOL {
     TEAM,
     ENEMY,
     ALL
