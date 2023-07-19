@@ -1099,8 +1099,9 @@ unsigned short Battle(Entity* originalUnits, unsigned short size) {
 	return result;
 }
 
-void generatePermutations(std::vector<int>& nums, std::vector<int>& permutation, unsigned short length, Entity* units, int start)
+void generatePermutations(std::vector<int>& nums, std::vector<int>& permutation, unsigned short length, Entity* units)
 {
+
 	if (permutation.size() == length)
 	{
 		unsigned short i = 0;
@@ -1122,16 +1123,17 @@ void generatePermutations(std::vector<int>& nums, std::vector<int>& permutation,
 			break;
 		}
 		permutationAmt++;
+		std::cout << "Loading " << (permutationAmt / TotalAmt) * 100 << " %\r";
 		return;
 	}
 
-	for (int i = start; i < nums.size(); ++i)
+	for (int i = 0; i < nums.size(); ++i)
 	{
 		std::vector<int> localPermutation(permutation);
 
 		localPermutation.push_back(nums[i]);
 
-		generatePermutations(nums, localPermutation, length, units, start);
+		generatePermutations(nums, localPermutation, length, units);
 
 		localPermutation.pop_back();
 
@@ -1161,15 +1163,13 @@ int main()
 	}
 
 	int length;
-	std::cout << "Insert Team size: ";
-	std::cin >> length;
-	if (length > 5 || length < 3) {
-		std::cerr << "Incorrect Length";
-		return 0;
-	}
-	TotalAmt = std::pow(56, (double)length);
+	do {
+		std::cout << "Insert Team size: ";
+		std::cin >> length;
+		if (length > 5 || length < 3)
+			std::cerr << "Incorrect Length\n";
+	} while (length > 5 || length < 3);
 	Entity* units = (Entity*)malloc(sizeof(Entity) * length * 2);
-
 	unsigned short k;
 	int i = 0;
 	do {
@@ -1180,29 +1180,14 @@ int main()
 			i++;
 		}
 		else std::cerr << "The unit you placed is a summon!\n";
-	} while (i < length);
+	} while (i < length || length > 5 || length < 3);
+
+	TotalAmt = std::pow(56, (double)length);
 	std::cout << TotalAmt << std::endl;
 
 	std::vector<int> permutation;
 #pragma endregion
-
-	std::vector<std::thread> threads;
-	int numThreads = std::min(length, static_cast<int>(nums.size()));
-
-	for (int threadId = 0; threadId < numThreads; threadId++)
-	{
-		std::thread myThread([&]() {
-			generatePermutations(nums, permutation, length, units, threadId);
-			});
-	}
-	for (std::thread& thread : threads)
-	{
-		thread.join();
-	}
-	/*std::cout << "Loading: " << ((double)permutationAmt / TotalAmt) * 100 << "%\r";
-	auto start = std::chrono::high_resolution_clock::now();
-	generatePermutations(nums, permutation, length, units, threadId);
-	auto end = std::chrono::high_resolution_clock::now();*/
+	generatePermutations(nums, permutation, length, units);
 
 	std::cout
 		<< "\nTeam Stats:\nWin Ratio: " << (double)TeamWinCount / TotalAmt
@@ -1213,16 +1198,3 @@ int main()
 }
 
 
-
-//int main() {
-//	std::srand(time(0));
-//	std::cout << "Genereate Babies\n";
-//	SetupComponents();
-//	std::cout << "Component Count: " << ComponentManager::componentCount << std::endl;
-//	SetupDemigods();
-//	std::cout << "Entity Count " << EntityManager::entityCount << std::endl;
-//	Entity testTeam[6] = { Entity(0),Entity(8),Entity(24),
-//						   Entity(0),Entity(0),Entity(23) };
-//	std::cout << (int) Battle(testTeam,6);
-//	return 0;
-//}

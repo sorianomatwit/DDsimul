@@ -28,12 +28,6 @@ struct OnSummonTrigger {};
 
 
 
-enum PRIORITY {
-    ONE = 0b00,
-    TWO = 0b10,
-    THREE = 0b11
-};
-
 enum TPOOL {
     TEAM,
     ENEMY,
@@ -43,7 +37,21 @@ enum TPOOL {
 struct PoolParams { uint8_t begin = 0;uint8_t poolSize; TPOOL target; };
 
 
-//struct DamageAbil { uint8_t dmg; PRIORITY priority = THREE;}; // priority 3
-//struct BuffAbil { uint8_t dmgAdd; uint8_t hpAdd; PRIORITY priority = TWO;};// priority 2
-//struct SummonAbil { unsigned short summonId; PRIORITY priority = ONE; };// priority 1
+//struct SelfSearch {};
+//struct BehindSearch {};
+//struct RandomSearch {};
+//struct SummonedSearch {};
+//struct AdjancentSearch{};
+//struct BackOfLineupSearch{};
+//struct FrontOfLineupSearch{};
+//struct HighestAttackSearch{};
+//struct HighestHealthSearch{};
+//struct LowestAttackSearch{};
+//struct LowestHealthSearch{};
+//struct SecondInLineupSearch{};
+
+
+//struct DamageAbil { uint8_t dmg;}; // priority 3
+//struct BuffAbil { uint8_t dmgAdd = 0; uint8_t hpAdd = 0;};// priority 2
+//struct SummonAbil { unsigned short summonId; };// priority 1
 
